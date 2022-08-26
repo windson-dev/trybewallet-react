@@ -40,7 +40,6 @@ class Login extends React.Component {
     return (
       <div>
         <form>
-
           <h4>
             Boas vindas ao TrybeWallet
           </h4>
