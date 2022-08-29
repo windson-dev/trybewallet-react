@@ -31,7 +31,7 @@ class Login extends React.Component {
   handleFormSubmit = () => {
     const { history, dispatch } = this.props;
     const { email } = this.state;
-    dispatch(email)
+    dispatch(email);
     history.push('/carteira');
   };
 
@@ -68,7 +68,7 @@ class Login extends React.Component {
 
           <button
             type="submit"
-            onClick={ () => this.handleFormSubmit()}
+            onClick={ () => this.handleFormSubmit() }
             disabled={ !this.validateEmailAndPassword() }
           >
             Entrar
@@ -87,6 +87,7 @@ Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(Login);

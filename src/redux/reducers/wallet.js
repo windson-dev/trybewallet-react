@@ -1,17 +1,42 @@
-import { CHANGE_WALLET } from '../actions';
+import {
+  REQUEST_API,
+  REQUEST_API_SUCCESSFUL,
+  REQUEST_API_FAILURE,
+} from '../actions';
 
-const INITIAL_STATE = {};
+const INITIAL_STATE = {
+  error: null,
+  isLoading: false,
+  value: '',
+  currencies: [],
+};
 
-const user = (state = INITIAL_STATE, action) => {
+const wallet = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case CHANGE_WALLET:
+  case REQUEST_API:
     return {
       ...state,
-      wallet: action.value,
+      isLoading: true,
+      error: null,
     };
+
+  case REQUEST_API_SUCCESSFUL:
+    return {
+      ...state,
+      currencies: Object.keys(action.data),
+      isLoading: false,
+      error: null,
+    };
+
+  case REQUEST_API_FAILURE:
+    return {
+      ...state,
+      error: action.error,
+    };
+
   default:
     return state;
   }
 };
 
-export default user;
+export default wallet;
