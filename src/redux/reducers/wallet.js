@@ -1,14 +1,16 @@
 import {
   REQUEST_API,
   REQUEST_API_SUCCESSFUL,
-  REQUEST_API_FAILURE,
+  DISPATCH_EXPENSES,
+  REQUEST_SUM_VALUE,
 } from '../actions';
 
 const INITIAL_STATE = {
   error: null,
   isLoading: false,
-  value: '',
   currencies: [],
+  expenses: [],
+  ask: 0,
 };
 
 const wallet = (state = INITIAL_STATE, action) => {
@@ -28,10 +30,16 @@ const wallet = (state = INITIAL_STATE, action) => {
       error: null,
     };
 
-  case REQUEST_API_FAILURE:
+  case DISPATCH_EXPENSES:
     return {
       ...state,
-      error: action.error,
+      expenses: [...state.expenses, ...action.value],
+    };
+
+  case REQUEST_SUM_VALUE:
+    return {
+      ...state,
+      ask: parseFloat((state.ask + action.value).toFixed(2)),
     };
 
   default:
