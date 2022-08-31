@@ -4,6 +4,7 @@ export const REQUEST_API_SUCCESSFUL = 'REQUEST_API_SUCCESSFUL';
 export const REQUEST_API_FAILURE = 'REQUEST_API_REQUEST_API_FAILURE';
 export const DISPATCH_EXPENSES = 'DISPATCH_EXPENSES';
 export const REQUEST_SUM_VALUE = 'REQUEST_SUM_VALUE';
+export const DELETE_EXPENSE = 'DELETE_EXPENSE';
 
 export const changeEmail = (value) => ({
   type: SAVE_EMAIL,
@@ -31,6 +32,11 @@ export const dispatchExpenses = (value) => ({
 
 export const sumAskValue = (value) => ({
   type: REQUEST_SUM_VALUE,
+  value,
+});
+
+export const deleteExpense = (value) => ({
+  type: DELETE_EXPENSE,
   value,
 });
 

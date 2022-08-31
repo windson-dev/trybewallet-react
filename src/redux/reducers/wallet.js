@@ -4,6 +4,7 @@ import {
   DISPATCH_EXPENSES,
   REQUEST_SUM_VALUE,
   REQUEST_API_FAILURE,
+  DELETE_EXPENSE,
 } from '../actions';
 
 const INITIAL_STATE = {
@@ -14,7 +15,7 @@ const INITIAL_STATE = {
   totalSumValues: 0,
 };
 
-function wallet(state = INITIAL_STATE, action) {
+const wallet = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case REQUEST_API:
     return {
@@ -48,9 +49,15 @@ function wallet(state = INITIAL_STATE, action) {
       totalSumValues: parseFloat((state.totalSumValues + action.value).toFixed(2)),
     };
 
+  case DELETE_EXPENSE:
+    return {
+      ...state,
+      expenses: state.expenses.filter((element) => element.id !== action.value),
+    };
+
   default:
     return state;
   }
-}
+};
 
 export default wallet;
