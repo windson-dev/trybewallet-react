@@ -27,6 +27,7 @@ function wallet(state = INITIAL_STATE, action) {
       ...state,
       currencies: Object.keys(action.data),
       isLoading: false,
+      error: null,
     };
 
   case REQUEST_API_FAILURE:
