@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 class Table extends Component {
   render() {
     return (
-      <div>Table</div>
+      <div>
+        Table
+      </div>
     );
   }
 }
 
-export default Table;
+export default (Table);

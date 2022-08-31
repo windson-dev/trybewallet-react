@@ -3,19 +3,17 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { dispatchExpenses, sumAskValue } from '../redux/actions';
 
-const obj = {
-  id: 0,
-  value: 0,
-  description: '',
-  currency: 'USD',
-  method: 'Dinheiro',
-  tag: 'Alimentação',
-};
-
 class WalletForm extends Component {
-  constructor() {
-    super();
-    this.state = obj;
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: 0,
+      value: '0',
+      description: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: 'Alimentação',
+    };
   }
 
   handleChange = ({ target }) => {
@@ -25,103 +23,99 @@ class WalletForm extends Component {
     });
   };
 
-  handleClick = async (event) => {
-    event.preventDefault();
-    const { id, value, description, currency, method, tag } = this.state;
-    const { dispatchExpensesToRedux, AskValue } = this.props;
+  handleClick = async () => {
+    const { id, value, currency } = this.state;
+    const { dispatchExpensesToRedux, askValue } = this.props;
     const getAPI1 = await fetch('https://economia.awesomeapi.com.br/json/all');
     const exchangeRates = await getAPI1.json();
-    const index = Object.keys(exchangeRates).indexOf(currency);
-    const askIndex = Object.values(exchangeRates)[index].ask;
-    const priceUpdate = parseFloat(value) * parseFloat(askIndex);
-    AskValue(priceUpdate);
-    const obj1 = {
-      id,
-      value,
-      description,
-      currency,
-      method,
-      tag,
+
+    const getCoinByIndexApi = Object.keys(exchangeRates).indexOf(currency);
+    const getCoinPrice = Object.values(exchangeRates)[getCoinByIndexApi].ask;
+    const coinConvertToBRL = parseFloat(value) * parseFloat(getCoinPrice);
+    askValue(coinConvertToBRL);
+
+    const saveObject = {
+      ...this.state,
       exchangeRates,
     };
-    dispatchExpensesToRedux(obj1);
+
+    dispatchExpensesToRedux(saveObject);
     this.setState({
       id: id + 1,
-      value: 0,
+      value: '0',
       description: '',
       currency: 'USD',
       method: 'Dinheiro',
       tag: 'Alimentação',
     });
-    const reset = document.getElementById('form');
-    reset.reset();
+    document.getElementById('form').reset();
   };
 
   render() {
     const { allCoins } = this.props;
     return (
-      <div>
-        <form
-          id="form"
+      <form
+        id="form"
+      >
+        <label htmlFor="value">
+          <input
+            type="number"
+            data-testid="value-input"
+            onChange={ this.handleChange }
+            name="value"
+          />
+        </label>
+
+        <label htmlFor="description">
+          Descrição da despesa
+          <input
+            type="text"
+            data-testid="description-input"
+            onChange={ this.handleChange }
+            name="description"
+          />
+        </label>
+
+        <select
+          data-testid="currency-input"
+          name="currency"
+          onChange={ this.handleChange }
         >
-          <label htmlFor="value">
-            Adicionar despesa
-            <input
-              type="number"
-              data-testid="value-input"
-              onChange={ this.handleChange }
-              name="value"
-            />
-          </label>
+          {allCoins.map((element) => <option key={ element }>{ element }</option>)}
+        </select>
 
-          <label htmlFor="description">
-            Descrição da despesa
-            <input
-              type="text"
-              data-testid="description-input"
-              onChange={ this.handleChange }
-              name="description"
-            />
-          </label>
+        <select
+          data-testid="method-input"
+          name="method"
+          onChange={ this.handleChange }
+        >
+          <option> Dinheiro </option>
+          <option> Cartão de crédito </option>
+          <option> Cartão de débito </option>
+        </select>
 
-          <select
-            data-testid="currency-input"
-            name="currency"
-            onChange={ this.handleChange }
-          >
-            {allCoins.map((element) => <option key={ element }>{ element }</option>)}
-          </select>
+        <select
+          data-testid="tag-input"
+          name="tag"
+          onChange={ this.handleChange }
+        >
+          <option value="Alimentação">Alimentação</option>
+          <option value="Lazer">Lazer</option>
+          <option value="Trabalho">Trabalho</option>
+          <option value="Transporte">Transporte </option>
+          <option value="Saúde">Saúde </option>
+        </select>
 
-          <select
-            data-testid="method-input"
-            name="method"
-            onChange={ this.handleChange }
-          >
-            <option> Dinheiro </option>
-            <option> Cartão de crédito </option>
-            <option> Cartão de débito </option>
-          </select>
-
-          <select
-            data-testid="tag-input"
-            name="tag"
-            onChange={ this.handleChange }
-          >
-            <option value="Alimentação">Alimentação</option>
-            <option value="Lazer">Lazer</option>
-            <option value="Trabalho">Trabalho</option>
-            <option value="Transporte">Transporte </option>
-            <option value="Saúde">Saúde </option>
-          </select>
-
+        <div>
           <button
-            type="button"
             onClick={ this.handleClick }
+            type="button"
           >
-            Adicionar Despesa
+            Adicionar despesa
           </button>
-        </form>
-      </div>
+        </div>
+
+      </form>
     );
   }
 }
@@ -129,7 +123,7 @@ class WalletForm extends Component {
 WalletForm.propTypes = {
   dispatchExpensesToRedux: PropTypes.func.isRequired,
   allCoins: PropTypes.string.isRequired,
-  AskValue: PropTypes.func.isRequired,
+  askValue: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -138,7 +132,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchExpensesToRedux: (...value) => dispatch(dispatchExpenses(value)),
-  AskValue: (value) => dispatch(sumAskValue(value)),
+  askValue: (value) => dispatch(sumAskValue(value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletForm);

@@ -19,10 +19,10 @@ export const requestAPISuccessful = (data) => ({
   data,
 });
 
-// export const requestAPIError = (error) => ({
-//   type: REQUEST_API_FAILURE,
-//   error,
-// });
+export const requestAPIError = (error) => ({
+  type: REQUEST_API_FAILURE,
+  error,
+});
 
 export const dispatchExpenses = (value) => ({
   type: DISPATCH_EXPENSES,
@@ -43,7 +43,7 @@ export function fetchAPI() {
       delete data.USDT;
       dispatch(requestAPISuccessful(data));
     } catch (error) {
-      console.log('error');
+      dispatch(requestAPIError(error.message));
     }
   };
 }

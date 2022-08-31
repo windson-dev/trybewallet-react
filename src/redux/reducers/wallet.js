@@ -3,23 +3,23 @@ import {
   REQUEST_API_SUCCESSFUL,
   DISPATCH_EXPENSES,
   REQUEST_SUM_VALUE,
+  REQUEST_API_FAILURE,
 } from '../actions';
 
 const INITIAL_STATE = {
-  error: null,
   isLoading: false,
+  error: null,
   currencies: [],
   expenses: [],
-  ask: 0,
+  totalSumValues: 0,
 };
 
-const wallet = (state = INITIAL_STATE, action) => {
+function wallet(state = INITIAL_STATE, action) {
   switch (action.type) {
   case REQUEST_API:
     return {
       ...state,
       isLoading: true,
-      error: null,
     };
 
   case REQUEST_API_SUCCESSFUL:
@@ -27,7 +27,12 @@ const wallet = (state = INITIAL_STATE, action) => {
       ...state,
       currencies: Object.keys(action.data),
       isLoading: false,
-      error: null,
+    };
+
+  case REQUEST_API_FAILURE:
+    return {
+      ...state,
+      error: action.error,
     };
 
   case DISPATCH_EXPENSES:
@@ -39,12 +44,12 @@ const wallet = (state = INITIAL_STATE, action) => {
   case REQUEST_SUM_VALUE:
     return {
       ...state,
-      ask: parseFloat((state.ask + action.value).toFixed(2)),
+      totalSumValues: parseFloat((state.totalSumValues + action.value).toFixed(2)),
     };
 
   default:
     return state;
   }
-};
+}
 
 export default wallet;
