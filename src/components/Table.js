@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { deleteExpense } from '../redux/actions';
+import { deleteExpense, decreaseExpenseValue } from '../redux/actions';
 
 class Table extends Component {
   render() {
@@ -34,7 +34,6 @@ class Table extends Component {
                   <td>{method}</td>
                   <td>{`${value}.00`}</td>
                   <td>{exchangeRates[currency].name}</td>
-                  {console.log(exchangeRates)}
                   <td>{Number(exchangeRates[currency].ask).toFixed(2) }</td>
                   <td>{(exchangeRates[currency].ask * value).toFixed(2)}</td>
                   <td>Real</td>
@@ -42,7 +41,9 @@ class Table extends Component {
                     <button
                       type="button"
                       data-testid="delete-btn"
-                      onClick={ () => dispatch(deleteExpense(id)) }
+                      onClick={ () => dispatch(deleteExpense(id))
+                        && dispatch(decreaseExpenseValue((
+                          value * exchangeRates[currency].ask).toFixed(2))) }
                     >
                       Excluir
                     </button>

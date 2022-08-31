@@ -5,6 +5,7 @@ import {
   REQUEST_SUM_VALUE,
   REQUEST_API_FAILURE,
   DELETE_EXPENSE,
+  DECREASE_EXPENSE_VALUE,
 } from '../actions';
 
 const INITIAL_STATE = {
@@ -53,6 +54,12 @@ const wallet = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       expenses: state.expenses.filter((element) => element.id !== action.value),
+    };
+
+  case DECREASE_EXPENSE_VALUE:
+    return {
+      ...state,
+      totalSumValues: (state.totalSumValues - action.value).toFixed(2),
     };
 
   default:
